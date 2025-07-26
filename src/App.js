@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import './App.css'
+// import './index.css'
+class App extends React.Component {
 
-function App() {
+  todoArray = 
+  [
+    "TODO1",
+    "TODO2",
+    "TODO3"
+  ]
+  addTodo()
+  {
+    console.log("Add to-do is called")
+    let todoText = document.getElementById("addTodo").value 
+    console.log("TodoText: ", todoText)
+    this.todoArray.push(todoText)
+    console.log("TODO Array: ", this.todoArray)
+
+  }
+
+render()
+{
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <label id='headingTodo'>Add to do</label><br/><br/>
+      <p style={{marginTop: "20%"}}>No To-Do Added yet</p>
+      <input type='text' id='addTodo'/>
+      <button id='AddTodoButton' onClick={()=>{this.addTodo()}}>Add to-do +</button>
+      <ol id='todoList'>
+      </ol>
     </div>
   );
+}
+
 }
 
 export default App;
