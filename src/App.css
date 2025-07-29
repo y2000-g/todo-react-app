@@ -1,8 +1,6 @@
 body
 {
   background: linear-gradient(#5ED864, #a5d85eff, #c2d85eff);
-  text-align:center;
-
 }
 html, body {
   height: 100%;
@@ -11,10 +9,22 @@ html, body {
 }
 #AddTodoButton
 {
-  background-color: lightyellow;
+  background-color: rgb(79, 193, 222);
   margin-top: 0%;
+  border-color: rgb(79, 193, 222);
 }
 #headingTodo
 {
   font-size: 300%;
+  text-align: center;
+  display: block;
+  font-size : 40px; 
+  font-weight: 500;
+  margin-top: 30px;
+}
+#modalBody
+{
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
 }
