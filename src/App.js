@@ -2,21 +2,22 @@ import React from "react";
 import './App.css'
 import { Button, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import deleteIcon from "./delete.png"
+import EditIcon from "./edit.png"
 class App extends React.Component {
 
+  INCOMPLETE = "Incomplete"
+  COMPLETE = "Complete"
+  ALL = "All"
   state =
   {
     showModal : false,
     count : 0,
-    todoArray :
-      [
-        // {
-        //   id : count++,
-        //   todo : "Todo1",
-        //   completed : false
-        // }
-      ]
+    todoArray : [ ],
+    filter : this.ALL,
   }
+  filterTodoCount = 0
+  
  
   handleShow = () => 
     {
@@ -49,9 +50,10 @@ class App extends React.Component {
         completed : false
       })
     }
-    // this.state.todoArray.push(todoText)
     console.log("TODO Array: ", this.state.todoArray)
     this.handleClose()
+    this.filterTodoCount = this.state.todoArray.length
+    // this.setState({...this.state})
   }
 
   editTodo = ()=>
@@ -85,35 +87,62 @@ class App extends React.Component {
     })
     this.setState({...this.state, todoArray: todoTempArray})
   }
-  
+
+  filterTodo(filterApplied)
+  {
+    console.log("FilterTodo: ",filterApplied)
+    this.setState({...this.state, filter: filterApplied})
+  }
 render()
 {
   return (
     <div>
-      <label id='headingTodo' >Add to do</label><br/>
-      <label>Count To-do : </label><label style={{fontWeight: "bold", marginLeft:'6px'}}>{this.state.todoArray.length}</label>
-      <label style={{ marginLeft:'30%'}}>Incomplete | </label><label> Complete | </label><label> All</label>
-      {
+      <label id='headingTodo' >Add to do</label><br/>   
+    {
       this.state.todoArray.length > 0 ?
-      (<div style={{textAlign:'right', marginRight: '20px'}}>
-        <button id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
+      (<div>
+          <label style={{marginLeft: "60px"}}>Count To-do : </label><label style={{fontWeight: "bold"}}>{this.filterTodoCount}</label>
+          <label style={{marginLeft: "30%"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> INCOMPLETE | </label><label onClick={()=>{this.filterTodo(this.COMPLETE)}}> COMPLETE | </label><label onClick={()=>{this.filterTodo(this.ALL)}}> ALL</label> 
+          <button style={{textAlign:'right', marginLeft: '200px'}} id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
       </div>) : 
       (<div style={{textAlign:'center'}}>
-        <p style={{marginTop: "20%"}}>No To-Do Added yet</p>
-        <button id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
+          <p style={{marginTop: "20%"}}>No To-Do Added yet</p>
+          <button id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
       </div>) 
-      }
+    }
 
       <ul id='todoList'>
         {this.state.todoArray.map((todo)=>
         {
-          if(todo.completed)
+          console.log("List show")
+          if(this.state.filter == "Complete")
           {
-            return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+              if(todo.completed)
+            {
+              this.filterTodoCount = this.state.todoArray.filter(todo => todo.completed).length;
+              return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+            }
+          }
+          else if(this.state.filter == "Incomplete")
+          {
+            if(!todo.completed)
+            {
+              this.filterTodoCount = this.state.todoArray.filter(todo => !todo.completed).length; 
+               console.log("TODO INCOMPLETED")
+              return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+            }
           }
           else
           {
-            return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+            if(todo.completed)
+            {
+              this.filterTodoCount = this.state.todoArray.length
+              console.log("TODO ALL")
+              return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+            }   
+            else
+              this.filterTodoCount = this.state.todoArray.length
+              return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={()=>{this.handleShow()}}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>          
           }
           
         })}
@@ -138,7 +167,7 @@ render()
       </Modal>
 
       {/* Modal Component */}
-      {/* <Modal show={this.state.showModal} onHide={this.handleClose}>
+      <Modal show={this.state.showModal} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit To-do</Modal.Title>
         </Modal.Header>
@@ -153,7 +182,7 @@ render()
             Close
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     
 
       {/* Modal Component */}
@@ -174,6 +203,7 @@ render()
         </Modal.Footer>
       </Modal> */}
       <button onClick={()=>{console.log(this.state)}}>Test Button</button>
+      {/* <img src="C:\Users\hp\Documents\Todo-react app\todo-react-app\src\edit.png"/> */}
       </div> 
 
         
