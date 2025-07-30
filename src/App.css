@@ -9,18 +9,19 @@ html, body {
 }
 #AddTodoButton
 {
-  background-color: rgb(79, 193, 222);
+  background-color: #2178fa;
+  border-color: #0d6efd;
   margin-top: 0%;
-  border-color: rgb(79, 193, 222);
+  color: white;
+  padding: 5px;
 }
 #headingTodo
 {
-  font-size: 300%;
   text-align: center;
   display: block;
   font-size : 40px; 
   font-weight: 500;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 #modalBody
 {
@@ -28,3 +29,20 @@ html, body {
   width: 100%;
   padding: .375rem .75rem;
 }
+#TodolistStyle
+{
+  background-color: azure;
+  padding: 10px;
+  margin: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  list-style: none;
+}
+#editingTodo
+{
+  margin-left: 80%;
+  margin-right: 5px;
+}
+/* #DeleteTodo
+{
+
+} */

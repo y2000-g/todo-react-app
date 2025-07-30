@@ -7,11 +7,14 @@ class App extends React.Component {
   state =
   {
     showModal : false,
+    count : 0,
     todoArray :
       [
-        "Todo1",
-        "Todo2",
-        "Todo3"
+        // {
+        //   id : count++,
+        //   todo : "Todo1",
+        //   completed : false
+        // }
       ]
   }
  
@@ -40,24 +43,56 @@ class App extends React.Component {
     }
     else
     {
-      this.state.todoArray.push(todoText)
+      this.state.todoArray.push({
+        id : this.state.count++,
+        todo : todoText,
+        completed : false
+      })
     }
     // this.state.todoArray.push(todoText)
     console.log("TODO Array: ", this.state.todoArray)
-    for(let index=1; index<this.state.todoArray.length; index++)
-    {
-      let todolistShow = document.getElementById("todoList").value
-      console.log("ToDOLIST SHOW: ", todolistShow)
-      this.todolistShow = this.state.todoArray[index]; 
-    }
     this.handleClose()
   }
 
+  editTodo = ()=>
+  {
+    console.log("Edit Todo")
+  }
+
+  deleteTodo = ()=>
+  {
+    console.log("Delete Todo")
+  }
+
+  saveTodo = ()=>
+  {
+    console.log("Save Todo")
+  }
+
+  completeClickHandler = (id)=>
+  {
+    console.log("completeClickHandler Clicked!!");
+    console.log("Id : ", id)
+    let todoTempArray = this.state.todoArray.map((todo)=>{
+        if (todo.id == id){
+          todo = {
+            id: todo.id,
+            todo : todo.todo,
+            completed : !todo.completed
+          }
+        }
+        return todo
+    })
+    this.setState({...this.state, todoArray: todoTempArray})
+  }
+  
 render()
 {
   return (
     <div>
-      <label id='headingTodo' >Add to do</label><br/><br/>
+      <label id='headingTodo' >Add to do</label><br/>
+      <label>Count To-do : </label><label style={{fontWeight: "bold", marginLeft:'6px'}}>{this.state.todoArray.length}</label>
+      <label style={{ marginLeft:'30%'}}>Incomplete | </label><label> Complete | </label><label> All</label>
       {
       this.state.todoArray.length > 0 ?
       (<div style={{textAlign:'right', marginRight: '20px'}}>
@@ -72,7 +107,15 @@ render()
       <ul id='todoList'>
         {this.state.todoArray.map((todo)=>
         {
-          return <li><input type="checkbox"/>{todo}</li>
+          if(todo.completed)
+          {
+            return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+          }
+          else
+          {
+            return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+          }
+          
         })}
       </ul>
 
@@ -93,7 +136,47 @@ render()
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+
+      {/* Modal Component */}
+      {/* <Modal show={this.state.showModal} onHide={this.handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit To-do</Modal.Title>
+        </Modal.Header>
+        <Modal.Body id='modalBody'>
+          <input className="form-control" type='text' id='SaveTodo'/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={this.saveTodo}>
+            Save
+          </Button>
+          <Button variant="secondary" onClick={this.handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
+    
+
+      {/* Modal Component */}
+      {/* <Modal show={this.state.showModal} onHide={this.handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete To-Do</Modal.Title>
+        </Modal.Header>
+        <Modal.Body id='modalBody'>
+          <input className="form-control" type='text'/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={this.deleteTodo}>
+            Delete
+          </Button>
+          <Button variant="secondary" onClick={this.handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
+      <button onClick={()=>{console.log(this.state)}}>Test Button</button>
+      </div> 
+
+        
   );
 }
 
