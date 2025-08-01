@@ -35,7 +35,7 @@ class App extends React.Component {
       console.log("Add to-do is called")
     let todoText = document.getElementById("addTodo").value 
       console.log("TodoText: ", todoText)
-      todoText = todoText.trim();
+    todoText = todoText.trim();
       if(todoText === "")
         {
           alert("To-do text can't be blank")
@@ -44,14 +44,19 @@ class App extends React.Component {
       else
         {
           let tempArray = this.state.todoArray
-          tempArray.push({
-            id : this.state.count++,
-            todo : todoText,
-            completed : false
-          })
-        this.setState({...this.state, todoArray : tempArray, filterTodoCount : tempArray.length})
+            tempArray.push(
+            {
+              id : this.state.count++,
+              todo : todoText,
+              completed : false
+            })
+          this.state.filterTodoCount = tempArray.length  
+          this.setState({...this.state, todoArray : tempArray, filterTodoCount : tempArray.length})
+          console.log("temp length ", tempArray.length);
+          
         }
-      console.log("TODO Array: ", this.state.todoArray)
+        console.log("TODO Count: ", this.filterTodoCount)
+        console.log("TODO Array: ", this.state.todoArray)
       this.handleClose()
   }
 
@@ -115,22 +120,23 @@ class App extends React.Component {
 render()
 {
   return (
-    <div>
-      <label id='headingTodo' >Add to do</label><br/>   
+    <div>   
     {
         this.state.todoArray.length > 0 ?
       (
         <div>
+          <label id='headingTodo1' >Add to do</label><br/>
           <label style={{marginLeft: "60px"}}>Count To-do : </label>
           <label style={{fontWeight: "bold"}}>{this.state.filterTodoCount}</label>
-          <label style={{marginLeft: "30%"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> INCOMPLETE | </label>
-          <label onClick={()=>{this.filterTodo(this.COMPLETE)}}> COMPLETE | </label>
-          <label onClick={()=>{this.filterTodo(this.ALL)}}> ALL</label> 
-          <button style={{textAlign:'right', marginLeft: '200px'}} id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
+          <label style={{marginLeft: "30%", fontWeight : this.state.filter === this.INCOMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> INCOMPLETE </label> |
+          <label style={{fontWeight : this.state.filter === this.COMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.COMPLETE)}}> COMPLETE </label> |
+          <label style={{fontWeight : this.state.filter === this.ALL ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.ALL)}}> ALL</label> 
+          <button style={{textAlign:'right', marginLeft: '500px'}} id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
         </div>
       ) : 
       (
         <div style={{textAlign:'center'}}>
+          <label id='headingTodo' >Add to do</label><br/>
           <p style={{marginTop: "20%"}}>No To-Do Added yet</p>
           <button id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
         </div>
@@ -141,36 +147,30 @@ render()
         { 
           this.state.todoArray.map((todo)=>
             {
-                console.log("List show")
-              
-              if(this.state.filter == this.completed)
+                console.log("List show")   
+              if(this.state.filter == this.COMPLETE)
                 {
                   if(todo.completed)
-                  {
-                    this.setState({...this.state, filterTodoCount : this.state.filterTodoCount++})
-                    // this.filterTodoCount = this.state.todoArray.filter(todo => todo.completed).length
-                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
-                  }
+                    {
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                    }
                 }
               else if(this.state.filter == this.INCOMPLETE)
                 {
                   if(!todo.completed)
-                  {
-                    this.filterTodoCount = this.state.todoArray.filter(todo => !todo.completed).length
-                    console.log("TODO INCOMPLETED")
-                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
-                  }
+                    {
+                      console.log("TODO INCOMPLETED")
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                    }
                 }
               else
                 {
                   if(todo.completed)
-                  {
-                    this.filterTodoCount = this.state.todoArray.length
-                    console.log("TODO ALL")
-                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
-                  }   
+                    {
+                      console.log("TODO ALL")
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                    }   
                   else
-                    this.filterTodoCount = this.state.todoArray.length
                     return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>          
                 }
             
