@@ -15,26 +15,80 @@ class App extends React.Component {
     count : 0,
     todoArray : [ ],
     filter : this.ALL,
-    filterTodoCount : 0
+    filterTodoCount : 0,
+    showEditModal: false,
+    editingTodo: {},
+    showDeleteModal: false
+  }
+
+  testFunction()
+  {
+    console.log("State: ", this.state)
+    
+    let tempArray = this.state.todoArray
+      tempArray.push(
+      {
+        id : this.state.count++,
+        todo : "Todo1",
+        completed : false
+      })
+       tempArray.push(
+      {
+        id : this.state.count++,
+        todo : "Todo2",
+        completed : false
+      })
+       tempArray.push(
+      {
+        id : this.state.count++,
+        todo : "Todo3",
+        completed : true
+      })
+       tempArray.push(
+      {
+        id : this.state.count++,
+        todo : "Todo4",
+        completed : false
+      })
+        let filteredTodos = tempArray.filter(todo => !todo.completed);
+        console.log("Filter todo: ", filteredTodos)
+        this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length })  
+    // this.state.filterTodoCount = tempArray.length  
+    // this.setState({...this.state, todoArray : tempArray, filterTodoCount : tempArray.length})
   }
  
   handleShow = () => 
     {
-      console.log("HandleShow")
       this.setState({ ...this.state, showModal: true })
-      console.log(this.state)
     };
   handleClose = () => 
     {
-      console.log("Handle Close");
       this.setState({ ...this.state, showModal: false })
+    };
+
+  handleEditShow = (todoId) => 
+    {
+      let editingTodoObj = (this.state.todoArray.find(({id})=> id == todoId))
+      this.setState({ ...this.state, showEditModal: true, editingTodo: editingTodoObj })
+    };
+  handleEditClose = () => 
+    {
+      this.setState({ ...this.state, showEditModal: false })
+    };
+
+  handleDeleteShow = (todoId) => 
+    {
+      let todoInputText = (this.state.todoArray.find(({id})=> id == todoId))
+      this.setState({ ...this.state, showDeleteModal: true, editingTodo: todoInputText })
+    };
+  handleDeleteClose = () => 
+    {
+      this.setState({ ...this.state, showDeleteModal: false })
     };
 
   addTodo()
   {
-      console.log("Add to-do is called")
     let todoText = document.getElementById("addTodo").value 
-      console.log("TodoText: ", todoText)
     todoText = todoText.trim();
       if(todoText === "")
         {
@@ -50,35 +104,82 @@ class App extends React.Component {
               todo : todoText,
               completed : false
             })
-          this.state.filterTodoCount = tempArray.length  
-          this.setState({...this.state, todoArray : tempArray, filterTodoCount : tempArray.length})
-          console.log("temp length ", tempArray.length);
-          
+            console.log("TempArray:", tempArray)
+            if(this.state.filter == this.ALL)
+            {
+              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length })
+              console.log("TempArray: ", tempArray)
+              console.log(this.state);
+              
+            }
+            else 
+            {
+              let filteredTodos = tempArray.filter((todo) => 
+                {
+                  console.log("Todo: ", todo)
+                  switch(this.state.filter)
+                  {
+                    case this.INCOMPLETE : 
+                    {
+                      console.log("Todo Competed: ", todo.completed)
+                      console.log("Filter: ", this.state.filter)
+                      if(todo.completed == false)
+                        return true
+                      else 
+                        return false
+                      break;
+                    }
+                      case this.COMPLETE : 
+                    {
+                      if(todo.completed == true)
+                        return true 
+                      else
+                        return false
+                      break;
+                    }
+                  }
+
+                });
+                console.log("filteredTodos: ", filteredTodos.length )
+                this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length })
+            }
         }
-        console.log("TODO Count: ", this.filterTodoCount)
-        console.log("TODO Array: ", this.state.todoArray)
       this.handleClose()
   }
-
-  editTodo = ()=>
-    {
-      console.log("Edit Todo")
-    }
 
   deleteTodo = ()=>
     {
       console.log("Delete Todo")
+      let updatedArray = this.state.todoArray.filter((todoObj)=> todoObj.id != this.state.editingTodo.id)
+      console.log("Updated Array: ", updatedArray)
+      this.setState({...this.state, todoArray: updatedArray, editingTodo: {}, showDeleteModal: false})
     }
 
   saveTodo = ()=>
     {
-      console.log("Save Todo")
+      let savetodoText = document.getElementById("editTodoInput").value 
+      savetodoText = savetodoText.trim();
+      if(savetodoText === "")
+        {
+          alert("To-do text can't be blank")
+          return;
+        }
+      else
+        {
+          const editedTodo = this.state.todoArray.map((todoObj)=> {
+            if (todoObj.id == this.state.editingTodo.id)
+            {
+              todoObj.todo = savetodoText 
+            }
+            return todoObj
+          } )
+          this.setState({...this.state, todoArray: editedTodo, editedTodo:{}})
+          this.handleEditClose()
+        }
     }
 
   completeClickHandler = (id)=>
     {
-        console.log("completeClickHandler Clicked!!");
-        console.log("Id : ", id)
       let todoTempArray = this.state.todoArray.map((todo)=>
       {
           if (todo.id == id)
@@ -92,13 +193,11 @@ class App extends React.Component {
           }
           return todo
       })
-      this.setState({...this.state, todoArray: todoTempArray})
+      this.setState({...this.state, todoArray: todoTempArray })
     }
 
   filterTodo(filterApplied)
     {
-      console.log("FilterTodo: ",filterApplied)
-
     let filteredTodos = [];
 
       if (filterApplied === this.INCOMPLETE) 
@@ -111,7 +210,7 @@ class App extends React.Component {
         } 
       else 
         {
-          filteredTodos = this.state.todoArray; // ALL
+          filteredTodos = this.state.todoArray; 
         }
 
       this.setState({ ...this.state, filter: filterApplied, filterTodoCount: filteredTodos.length});
@@ -128,9 +227,9 @@ render()
           <label id='headingTodo1' >Add to do</label><br/>
           <label style={{marginLeft: "60px"}}>Count To-do : </label>
           <label style={{fontWeight: "bold"}}>{this.state.filterTodoCount}</label>
-          <label style={{marginLeft: "30%", fontWeight : this.state.filter === this.INCOMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> INCOMPLETE </label> |
-          <label style={{fontWeight : this.state.filter === this.COMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.COMPLETE)}}> COMPLETE </label> |
-          <label style={{fontWeight : this.state.filter === this.ALL ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.ALL)}}> ALL</label> 
+          <label style={{marginLeft: "30%", fontWeight : this.state.filter === this.INCOMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> Incomplete | </label>
+          <label style={{fontWeight : this.state.filter === this.COMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.COMPLETE)}}> &nbsp; Completed | </label> 
+          <label style={{fontWeight : this.state.filter === this.ALL ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.ALL)}}> &nbsp;All</label> 
           <button style={{textAlign:'right', marginLeft: '500px'}} id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
         </div>
       ) : 
@@ -146,32 +245,29 @@ render()
       <ul id='todoList'>
         { 
           this.state.todoArray.map((todo)=>
-            {
-                console.log("List show")   
+            { 
               if(this.state.filter == this.COMPLETE)
                 {
                   if(todo.completed)
                     {
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo">Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
                     }
                 }
               else if(this.state.filter == this.INCOMPLETE)
                 {
                   if(!todo.completed)
                     {
-                      console.log("TODO INCOMPLETED")
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={()=>{this.handleEditShow(todo.id)}}>Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
                     }
                 }
               else
                 {
                   if(todo.completed)
                     {
-                      console.log("TODO ALL")
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo">Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
                     }   
                   else
-                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={this.editTodo}>Edit</button><button onClick={this.deleteTodo} id="DeleteTodo">Delete</button></li>          
+                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={()=>{this.handleEditShow(todo.id)}}>Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>          
                 }
             
             })
@@ -197,43 +293,44 @@ render()
       </Modal>
 
       {/* Modal Component */}
-      {/* <Modal show={this.state.showModal} onHide={this.handleClose}>
+      <Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit To-Do</Modal.Title>
         </Modal.Header>
-        <Modal.Body id='modalBody'>
-          <input className="form-control" type='text' id='SaveTodo'/>
+        <Modal.Body id='editBody'>
+          <input className="form-control" type='text' id='editTodoInput' defaultValue={this.state.editingTodo.todo}></input>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={this.saveTodo}>
             Save
           </Button>
-          <Button variant="secondary" onClick={this.handleClose}>
+          <Button variant="secondary" onClick={this.handleEditClose}>
             Close
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     
 
       {/* Modal Component */}
-      {/* <Modal show={this.state.showModal} onHide={this.handleClose}>
+      <Modal show={this.state.showDeleteModal} onHide={this.handleDeleteClose}>
         <Modal.Header closeButton>
           <Modal.Title>Delete To-Do</Modal.Title>
         </Modal.Header>
-        <Modal.Body id='modalBody'>
-          <input className="form-control" type='text'/>
+        <Modal.Body id='modalDeleteBody'>
+          <label>Confirm To Delete : {this.state.editingTodo.todo}</label>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={this.deleteTodo}>
             Delete
           </Button>
-          <Button variant="secondary" onClick={this.handleClose}>
+          <Button variant="secondary" onClick={this.handleDeleteClose}>
             Close
           </Button>
         </Modal.Footer>
-      </Modal> */}
-      <button onClick={()=>{console.log(this.state)}}>Test Button</button>
-      {/* <img src="C:\Users\hp\Documents\Todo-react app\todo-react-app\src\edit.png"/> */}
+      </Modal>
+
+      <button onClick={()=>{this.testFunction()}}>Test Button</button><br/>
+      <button onClick={()=>{console.log(this.state)}}>State</button>
       </div> 
 
         
