@@ -4,7 +4,9 @@ import { Button, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import deleteIcon from "./delete.png"
 import EditIcon from "./edit.png"
-class App extends React.Component {
+
+class App extends React.Component 
+{
 
   INCOMPLETE = "Incomplete"
   COMPLETE = "Complete"
@@ -14,7 +16,7 @@ class App extends React.Component {
     showModal : false,
     count : 0,
     todoArray : [ ],
-    filter : this.ALL,
+    filter : this.INCOMPLETE,
     filterTodoCount : 0,
     showEditModal: false,
     editingTodo: {},
@@ -23,7 +25,7 @@ class App extends React.Component {
 
   testFunction()
   {
-    console.log("State: ", this.state)
+    //console.log("State: ", this.state)
     
     let tempArray = this.state.todoArray
       tempArray.push(
@@ -50,11 +52,46 @@ class App extends React.Component {
         todo : "Todo4",
         completed : false
       })
-        let filteredTodos = tempArray.filter(todo => !todo.completed);
-        console.log("Filter todo: ", filteredTodos)
-        this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length })  
-    // this.state.filterTodoCount = tempArray.length  
-    // this.setState({...this.state, todoArray : tempArray, filterTodoCount : tempArray.length})
+         if(this.state.filter == this.ALL)
+            {
+              // this.state.filterTodoCount = tempArray.length
+              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length, showModal: false })
+              //console.log("TempArray: ", tempArray)
+              //console.log(this.state);           
+            }
+             else 
+            {
+              let filteredTodos = tempArray.filter((todo) => 
+                {
+                  //console.log("Todo: ", todo)
+                  switch(this.state.filter)
+                  {
+                    case this.INCOMPLETE : 
+                    {
+                      //console.log("Todo Competed: ", todo.completed)
+                      //console.log("Filter: ", this.state.filter)
+                      if(todo.completed == false)
+                        return true
+                      else 
+                        return false
+                      break;
+                    }
+                      case this.COMPLETE : 
+                    {
+                      if(todo.completed == true)
+                        return true 
+                      else
+                        return false
+                      break;
+                    }
+                  }
+
+                });
+                //console.log("filteredTodos: ", filteredTodos.length )
+                // this.state.filterTodoCount = filteredTodos.length
+                this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length, showModal: false })
+                //console.log(this.state)
+            }
   }
  
   handleShow = () => 
@@ -104,25 +141,26 @@ class App extends React.Component {
               todo : todoText,
               completed : false
             })
-            console.log("TempArray:", tempArray)
+            //console.log("TempArray:", tempArray)
             if(this.state.filter == this.ALL)
             {
-              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length })
-              console.log("TempArray: ", tempArray)
-              console.log(this.state);
+              // this.state.filterTodoCount = tempArray.length
+              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length, showModal: false })
+              //console.log("TempArray: ", tempArray)
+              //console.log(this.state);
               
             }
             else 
             {
               let filteredTodos = tempArray.filter((todo) => 
                 {
-                  console.log("Todo: ", todo)
+                  //console.log("Todo: ", todo)
                   switch(this.state.filter)
                   {
                     case this.INCOMPLETE : 
                     {
-                      console.log("Todo Competed: ", todo.completed)
-                      console.log("Filter: ", this.state.filter)
+                      //console.log("Todo Competed: ", todo.completed)
+                      //console.log("Filter: ", this.state.filter)
                       if(todo.completed == false)
                         return true
                       else 
@@ -140,18 +178,20 @@ class App extends React.Component {
                   }
 
                 });
-                console.log("filteredTodos: ", filteredTodos.length )
-                this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length })
+                //console.log("filteredTodos: ", filteredTodos.length )
+                // this.state.filterTodoCount = filteredTodos.length
+                this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length, showModal: false })
+                //console.log(this.state)
             }
         }
-      this.handleClose()
+      // this.handleClose()
   }
 
   deleteTodo = ()=>
     {
-      console.log("Delete Todo")
+      //console.log("Delete Todo")
       let updatedArray = this.state.todoArray.filter((todoObj)=> todoObj.id != this.state.editingTodo.id)
-      console.log("Updated Array: ", updatedArray)
+      //console.log("Updated Array: ", updatedArray)
       this.setState({...this.state, todoArray: updatedArray, editingTodo: {}, showDeleteModal: false})
     }
 
@@ -193,7 +233,46 @@ class App extends React.Component {
           }
           return todo
       })
-      this.setState({...this.state, todoArray: todoTempArray })
+      if(this.state.filter == this.ALL)
+            {
+              // this.state.filterTodoCount = tempArray.length
+              this.setState({...this.state, todoArray : todoTempArray, filterTodoCount: todoTempArray.length })
+              //console.log("TempArray: ", todoTempArray)
+              //console.log(this.state);
+              
+            }
+            else 
+            {
+              let filteredTodos = todoTempArray.filter((todo) => 
+                {
+                  //console.log("Todo: ", todo)
+                  switch(this.state.filter)
+                  {
+                    case this.INCOMPLETE : 
+                    {
+                      //console.log("Todo Competed: ", todo.completed)
+                      //console.log("Filter: ", this.state.filter)
+                      if(todo.completed == false)
+                        return true
+                      else 
+                        return false
+                      break;
+                    }
+                      case this.COMPLETE : 
+                    {
+                      if(todo.completed == true)
+                        return true 
+                      else
+                        return false
+                      break;
+                    }
+                  }
+
+                });
+                //console.log("filteredTodos: ", filteredTodos.length )
+                // this.state.filterTodoCount = filteredTodos.length
+                this.setState({...this.state, todoArray : todoTempArray, filterTodoCount: filteredTodos.length, showModal: false })
+            }     
     }
 
   filterTodo(filterApplied)
@@ -250,24 +329,24 @@ render()
                 {
                   if(todo.completed)
                     {
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo">Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><img src={deleteIcon} alt="deleteLogo" className="deleteImg" onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo" width="20"/><img src={EditIcon} alt="editLogo" width="20" id="editingTodo"/></li>
                     }
                 }
               else if(this.state.filter == this.INCOMPLETE)
                 {
                   if(!todo.completed)
                     {
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={()=>{this.handleEditShow(todo.id)}}>Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<img src={deleteIcon} alt="deleteLogo" className="deleteImg" onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo" width="20"/><img src={EditIcon} alt="editLogo" width="20" id="editingTodo" onClick={()=>{this.handleEditShow(todo.id)}}/></li>
                     }
                 }
               else
                 {
                   if(todo.completed)
                     {
-                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><button id="editingTodo">Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>
+                      return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/><s>{todo.todo}</s><img src={deleteIcon} alt="deleteLogo" className="deleteImg" onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo" width="20"/><img src={EditIcon} alt="editLogo" width="20" id="editingTodo"/></li>
                     }   
                   else
-                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<button id="editingTodo" onClick={()=>{this.handleEditShow(todo.id)}}>Edit</button><button onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo">Delete</button></li>          
+                    return <li id='TodolistStyle'><input onClick={()=>{this.completeClickHandler(todo.id)}} type="checkbox" style={{margin:'10px'}}/>{todo.todo}<img src={deleteIcon} alt="deleteLogo" className="deleteImg" onClick={()=>{this.handleDeleteShow(todo.id)}} id="DeleteTodo" width="20"/><img src={EditIcon} alt="editLogo" width="20" id="editingTodo"  onClick={()=>{this.handleEditShow(todo.id)}}/></li>          
                 }
             
             })
@@ -329,11 +408,8 @@ render()
         </Modal.Footer>
       </Modal>
 
-      <button onClick={()=>{this.testFunction()}}>Test Button</button><br/>
-      <button onClick={()=>{console.log(this.state)}}>State</button>
+      <button onClick={()=>{this.testFunction()}}>Test Button</button><br/><br/>
       </div> 
-
-        
   );
 }
 

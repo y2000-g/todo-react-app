@@ -50,6 +50,20 @@ html, body {
 }
 #editingTodo
 {
-  margin-left: 87%;
-  margin-right: 5px;
+  /* margin-left: 90%;
+  margin-right: 5px; */
+  float: right;
 }
+.deleteImg
+{
+  float: right;
+}
+/* .actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions img {
+  cursor: pointer;
+} */
