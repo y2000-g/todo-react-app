@@ -25,8 +25,6 @@ class App extends React.Component
 
   testFunction()
   {
-    //console.log("State: ", this.state)
-    
     let tempArray = this.state.todoArray
       tempArray.push(
       {
@@ -54,22 +52,16 @@ class App extends React.Component
       })
          if(this.state.filter == this.ALL)
             {
-              // this.state.filterTodoCount = tempArray.length
-              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length, showModal: false })
-              //console.log("TempArray: ", tempArray)
-              //console.log(this.state);           
+              this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length, showModal: false })           
             }
              else 
             {
               let filteredTodos = tempArray.filter((todo) => 
                 {
-                  //console.log("Todo: ", todo)
                   switch(this.state.filter)
                   {
                     case this.INCOMPLETE : 
                     {
-                      //console.log("Todo Competed: ", todo.completed)
-                      //console.log("Filter: ", this.state.filter)
                       if(todo.completed == false)
                         return true
                       else 
@@ -87,10 +79,7 @@ class App extends React.Component
                   }
 
                 });
-                //console.log("filteredTodos: ", filteredTodos.length )
-                // this.state.filterTodoCount = filteredTodos.length
                 this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length, showModal: false })
-                //console.log(this.state)
             }
   }
  
@@ -141,26 +130,18 @@ class App extends React.Component
               todo : todoText,
               completed : false
             })
-            //console.log("TempArray:", tempArray)
             if(this.state.filter == this.ALL)
             {
-              // this.state.filterTodoCount = tempArray.length
               this.setState({...this.state, todoArray : tempArray, filterTodoCount: tempArray.length, showModal: false })
-              //console.log("TempArray: ", tempArray)
-              //console.log(this.state);
-              
             }
             else 
             {
               let filteredTodos = tempArray.filter((todo) => 
                 {
-                  //console.log("Todo: ", todo)
                   switch(this.state.filter)
                   {
                     case this.INCOMPLETE : 
                     {
-                      //console.log("Todo Competed: ", todo.completed)
-                      //console.log("Filter: ", this.state.filter)
                       if(todo.completed == false)
                         return true
                       else 
@@ -178,20 +159,14 @@ class App extends React.Component
                   }
 
                 });
-                //console.log("filteredTodos: ", filteredTodos.length )
-                // this.state.filterTodoCount = filteredTodos.length
                 this.setState({...this.state, todoArray : tempArray, filterTodoCount: filteredTodos.length, showModal: false })
-                //console.log(this.state)
             }
         }
-      // this.handleClose()
   }
 
   deleteTodo = ()=>
     {
-      //console.log("Delete Todo")
       let updatedArray = this.state.todoArray.filter((todoObj)=> todoObj.id != this.state.editingTodo.id)
-      //console.log("Updated Array: ", updatedArray)
       this.setState({...this.state, todoArray: updatedArray, editingTodo: {}, showDeleteModal: false})
     }
 
@@ -235,23 +210,16 @@ class App extends React.Component
       })
       if(this.state.filter == this.ALL)
             {
-              // this.state.filterTodoCount = tempArray.length
               this.setState({...this.state, todoArray : todoTempArray, filterTodoCount: todoTempArray.length })
-              //console.log("TempArray: ", todoTempArray)
-              //console.log(this.state);
-              
             }
             else 
             {
               let filteredTodos = todoTempArray.filter((todo) => 
                 {
-                  //console.log("Todo: ", todo)
                   switch(this.state.filter)
                   {
                     case this.INCOMPLETE : 
                     {
-                      //console.log("Todo Competed: ", todo.completed)
-                      //console.log("Filter: ", this.state.filter)
                       if(todo.completed == false)
                         return true
                       else 
@@ -269,8 +237,6 @@ class App extends React.Component
                   }
 
                 });
-                //console.log("filteredTodos: ", filteredTodos.length )
-                // this.state.filterTodoCount = filteredTodos.length
                 this.setState({...this.state, todoArray : todoTempArray, filterTodoCount: filteredTodos.length, showModal: false })
             }     
     }
