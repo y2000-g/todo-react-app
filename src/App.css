@@ -57,6 +57,7 @@ html, body {
 .deleteImg
 {
   float: right;
+  margin-left: 10px;
 }
 /* .actions {
   display: flex;
