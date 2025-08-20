@@ -29,25 +29,25 @@ class App extends React.Component
       tempArray.push(
       {
         id : this.state.count++,
-        todo : "Todo1",
+        todo : "Buy groseries from market",
         completed : false
       })
        tempArray.push(
       {
         id : this.state.count++,
-        todo : "Todo2",
+        todo : "Pay Electricity Bill",
         completed : false
       })
        tempArray.push(
       {
         id : this.state.count++,
-        todo : "Todo3",
+        todo : "Completing Home Work",
         completed : true
       })
        tempArray.push(
       {
         id : this.state.count++,
-        todo : "Todo4",
+        todo : "Make a To-do Application",
         completed : false
       })
          if(this.state.filter == this.ALL)
@@ -269,10 +269,11 @@ render()
         this.state.todoArray.length > 0 ?
       (
         <div>
-          <label id='headingTodo1' >Add to do</label><br/>
+          <label id='headingTodo1' >To-Do App</label><br/>
           <label style={{marginLeft: "60px"}}>Count To-do : </label>
           <label style={{fontWeight: "bold"}}>{this.state.filterTodoCount}</label>
-          <label style={{marginLeft: "30%", fontWeight : this.state.filter === this.INCOMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> Incomplete | </label>
+          <label style={{marginLeft: "28%", fontWeight:'bold', fontStyle:'oblique'}}>Filters :</label>
+          <label style={{marginLeft: "10px", fontWeight : this.state.filter === this.INCOMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.INCOMPLETE)}}> Incomplete | </label>
           <label style={{fontWeight : this.state.filter === this.COMPLETE ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.COMPLETE)}}> &nbsp; Completed | </label> 
           <label style={{fontWeight : this.state.filter === this.ALL ? "bold" : "normal"}} onClick={()=>{this.filterTodo(this.ALL)}}> &nbsp;All</label> 
           <button style={{textAlign:'right', marginLeft: '500px'}} id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
@@ -280,7 +281,7 @@ render()
       ) : 
       (
         <div style={{textAlign:'center'}}>
-          <label id='headingTodo' >Add to do</label><br/>
+          <label id='headingTodo' >To-Do App</label><br/>
           <p style={{marginTop: "20%"}}>No To-Do Added yet</p>
           <button id='AddTodoButton' onClick={()=>{this.handleShow()}}>Add to-do +</button>
         </div>
@@ -325,7 +326,7 @@ render()
           <Modal.Title>Add To-Do</Modal.Title>
         </Modal.Header>
         <Modal.Body id='modalBody'>
-          <input className="form-control" type='text' id='addTodo'/>
+          <input className="form-control" placeholder="Add To-Do here" type='text' id='addTodo'/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={()=>{this.addTodo()}}>
@@ -343,7 +344,7 @@ render()
           <Modal.Title>Edit To-Do</Modal.Title>
         </Modal.Header>
         <Modal.Body id='editBody'>
-          <input className="form-control" type='text' id='editTodoInput' defaultValue={this.state.editingTodo.todo}></input>
+          <input className="form-control" type='text' placeholder="Editing To-do" id='editTodoInput' defaultValue={this.state.editingTodo.todo}></input>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={this.saveTodo}>
@@ -374,7 +375,7 @@ render()
         </Modal.Footer>
       </Modal>
 
-      <button onClick={()=>{this.testFunction()}}>Test Button</button><br/><br/>
+      <button onClick={()=>{this.testFunction()}}>Add Dummy To-dos</button><br/><br/>
       </div> 
   );
 }

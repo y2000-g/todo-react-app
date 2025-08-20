@@ -46,7 +46,7 @@ html, body {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   list-style: none;
   margin-right: 30px;
-  
+  border-radius: 10px;  
 }
 #editingTodo
 {
